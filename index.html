@@ -1,1501 +1,237 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>استوديو البطاقات الزجاجية الفاخرة | Luxury Glass Card Studio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;600;700;900&family=Changa:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <style>
-    :root {
-      --bg-dark: #0b0e14;
-      --panel-bg: #131822;
-      --panel-surface: #1b2230;
-      --border-color: rgba(255, 255, 255, 0.09);
-      --gold-primary: #e5c158;
-      --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 45%, #b38728 75%, #fbf5b7 100%);
-      --text-main: #f3f5f8;
-      --text-muted: #94a3b8;
-      --accent-blue: #38bdf8;
-      --danger: #ef4444;
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: 'Cairo', 'Tajawal', sans-serif;
-    }
-
-    .app-shell {
-      display: flex;
-      flex-direction: column;
-      height: 100dvh;
-      width: 100vw;
-      overflow: hidden;
-    }
-
-    /* Top Header */
-    .top-bar {
-      height: 50px;
-      background: #0f131b;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 10px;
-      gap: 6px;
-      flex-shrink: 0;
-      z-index: 50;
-    }
-
-    .brand-title {
-      font-size: 13px;
-      font-weight: 800;
-      background: var(--gold-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .btn-top {
-      background: var(--panel-surface);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      border-radius: 8px;
-      padding: 6px 9px;
-      font-size: 11px;
-      font-family: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: 0.15s ease;
-    }
-
-    .btn-top:active {
-      transform: scale(0.96);
-    }
-
-    .btn-gold {
-      background: var(--gold-gradient);
-      color: #181204;
-      border: none;
-      box-shadow: 0 2px 10px rgba(212, 175, 55, 0.25);
-    }
-
-    /* Upper Workspace / Stage */
-    .stage-wrapper {
-      position: relative;
-      height: 46%;
-      width: 100%;
-      background: radial-gradient(circle at center, #1a2130 0%, #090c10 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex-shrink: 0;
-      transition: height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-      touch-action: none;
-    }
-
-    .app-shell.fullscreen-mode .stage-wrapper {
-      height: calc(100dvh - 50px);
-    }
-
-    .stage-grid-bg {
-      position: absolute;
-      inset: 0;
-      background-image: 
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 20px 20px;
-      pointer-events: none;
-    }
-
-    /* Dimension Badge & Zoom Controls on Stage */
-    .stage-hud-top {
-      position: absolute;
-      top: 8px;
-      left: 10px;
-      right: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      pointer-events: none;
-      z-index: 30;
-    }
-
-    .dim-badge {
-      background: rgba(15, 19, 27, 0.78);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: var(--gold-primary);
-      padding: 3px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      direction: ltr;
-    }
-
-    .zoom-pill {
-      pointer-events: auto;
-      display: flex;
-      align-items: center;
-      background: rgba(15, 19, 27, 0.82);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .zoom-pill button {
-      background: transparent;
-      border: none;
-      color: var(--text-main);
-      padding: 4px 9px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    .zoom-pill button:active {
-      background: rgba(255,255,255,0.1);
-    }
-
-    .zoom-pill span {
-      font-size: 10px;
-      color: var(--text-muted);
-      padding: 0 4px;
-      direction: ltr;
-    }
-
-    .floating-restore-btn {
-      position: absolute;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 40;
-      background: var(--gold-gradient);
-      color: #161003;
-      border: none;
-      border-radius: 30px;
-      padding: 9px 18px;
-      font-family: inherit;
-      font-weight: 800;
-      font-size: 13px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.65);
-      display: none;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-
-    .app-shell.fullscreen-mode .floating-restore-btn {
-      display: inline-flex;
-    }
-
-    /* Card Scaler & Actual Card Canvas */
-    #card-scaler {
-      transform-origin: center center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.12s ease-out;
-    }
-
-    #design-card {
-      position: relative;
-      width: 1000px;
-      height: 600px;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #090d16 100%);
-      overflow: hidden;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.12);
-      border-radius: 16px;
-    }
-
-    #card-bg-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    #card-empty-hint {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: rgba(255, 255, 255, 0.25);
-      pointer-events: none;
-      text-align: center;
-      padding: 20px;
-      z-index: 1;
-    }
-
-    #card-empty-hint svg {
-      width: 54px;
-      height: 54px;
-      margin-bottom: 10px;
-      opacity: 0.45;
-    }
-
-    /* Canvas Elements */
-    .canvas-item {
-      position: absolute;
-      cursor: grab;
-      touch-action: none;
-      transform-origin: center center;
-    }
-
-    .canvas-item.selected {
-      outline: 2.5px dashed #38bdf8;
-      outline-offset: 4px;
-    }
-
-    .canvas-item.editing-text {
-      outline: 2.5px solid #e5c158;
-      cursor: text;
-    }
-
-    /* Resize & Rotate Handle */
-    .item-handle {
-      display: none;
-      position: absolute;
-      bottom: -14px;
-      left: -14px;
-      width: 28px;
-      height: 28px;
-      background: #38bdf8;
-      border: 3px solid #0f172a;
-      border-radius: 50%;
-      z-index: 999;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.5);
-    }
-
-    .canvas-item.selected .item-handle {
-      display: flex;
-    }
-
-    .item-handle::after {
-      content: "⤡";
-      color: #090d16;
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    /* Text Element */
-    .item-text-box {
-      min-width: 60px;
-      min-height: 30px;
-      padding: 6px 12px;
-      white-space: pre-wrap;
-      word-break: break-word;
-      line-height: 1.35;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .item-text-content {
-      outline: none;
-      width: 100%;
-    }
-
-    .gold-3d-text {
-      background: linear-gradient(180deg, #fff6d1 0%, #e5c158 35%, #b38728 70%, #f5df8d 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0px 3px 0px #5c4209) drop-shadow(0px 6px 10px rgba(0,0,0,0.65));
-    }
-
-    /* Image Element */
-    .item-image-frame {
-      width: 240px;
-      height: 240px;
-      overflow: hidden;
-      position: relative;
-      background: rgba(255, 255, 255, 0.04);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .item-image-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-      transform-origin: center center;
-    }
-
-    .shape-arch {
-      border-radius: 50% 50% 14px 14px / 42% 42% 14px 14px;
-    }
-    .shape-circle {
-      border-radius: 50%;
-    }
-    .shape-rounded {
-      border-radius: 26px;
-    }
-    .shape-rect {
-      border-radius: 4px;
-    }
-
-    /* Layer Element (Glass, Gold Frame, Wave) */
-    .item-layer-box {
-      width: 340px;
-      height: 200px;
-    }
-
-    .layer-glass {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      border-radius: 22px;
-    }
-
-    .layer-gold-frame {
-      background: transparent;
-      border: 3px solid #e5c158;
-      border-radius: 18px;
-      box-shadow: inset 0 0 18px rgba(229, 193, 88, 0.25);
-    }
-
-    .layer-wave {
-      background: radial-gradient(circle at 30% 30%, rgba(229, 193, 88, 0.55), rgba(56, 189, 248, 0.15) 70%, transparent 100%);
-      border-radius: 50%;
-      filter: blur(2px);
-    }
-
-    /* Bottom Control Dock */
-    .controls-dock {
-      flex: 1;
-      background: var(--panel-bg);
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      z-index: 45;
-    }
-
-    .app-shell.fullscreen-mode .controls-dock {
-      display: none;
-    }
-
-    .tabs-nav {
-      display: flex;
-      background: #0d1118;
-      border-bottom: 1px solid var(--border-color);
-      overflow-x: auto;
-      scrollbar-width: none;
-      flex-shrink: 0;
-    }
-
-    .tabs-nav::-webkit-scrollbar {
-      display: none;
-    }
-
-    .tab-btn {
-      flex: 1;
-      min-width: 64px;
-      background: transparent;
-      border: none;
-      border-bottom: 2.5px solid transparent;
-      color: var(--text-muted);
-      padding: 10px 6px;
-      font-family: inherit;
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      white-space: nowrap;
-      transition: 0.15s;
-    }
-
-    .tab-btn.active {
-      color: var(--gold-primary);
-      border-bottom-color: var(--gold-primary);
-      background: rgba(229, 193, 88, 0.06);
-    }
-
-    .tab-panels {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px 14px 28px;
-    }
-
-    .tab-pane {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .tab-pane.active {
-      display: flex;
-    }
-
-    /* Form Controls & Cards */
-    .control-card {
-      background: var(--panel-surface);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .section-label {
-      font-size: 11.5px;
-      font-weight: 800;
-      color: var(--gold-primary);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 7px;
-    }
-
-    .btn-action {
-      background: #242e42;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-main);
-      padding: 9px 10px;
-      border-radius: 9px;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: 0.15s;
-    }
-
-    .btn-action:active {
-      transform: scale(0.97);
-    }
-
-    .btn-action.primary {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      border-color: #3b82f6;
-    }
-
-    .btn-action.danger {
-      background: rgba(239, 68, 68, 0.15);
-      border-color: rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
-    }
-
-    .btn-pill {
-      background: #131822;
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 7px 8px;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .btn-pill.active {
-      background: rgba(229, 193, 88, 0.16);
-      border-color: var(--gold-primary);
-      color: var(--gold-primary);
-    }
-
-    .field-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      font-size: 12px;
-    }
-
-    .field-row label {
-      color: var(--text-muted);
-      font-weight: 600;
-      min-width: 78px;
-    }
-
-    input[type="range"] {
-      flex: 1;
-      accent-color: var(--gold-primary);
-      height: 5px;
-      background: #0f131b;
-      border-radius: 4px;
-    }
-
-    input[type="text"], input[type="number"], textarea, select {
-      background: #0f131b;
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      border-radius: 8px;
-      padding: 8px 10px;
-      font-family: inherit;
-      font-size: 12.5px;
-      width: 100%;
-      user-select: text;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 56px;
-    }
-
-    input[type="color"] {
-      width: 36px;
-      height: 30px;
-      border: none;
-      border-radius: 6px;
-      background: transparent;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .val-badge {
-      font-size: 11px;
-      color: var(--text-main);
-      min-width: 36px;
-      text-align: left;
-      direction: ltr;
-      font-weight: 700;
-    }
-
-    /* Preset Swatches */
-    .bg-swatches {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-    }
-
-    .swatch {
-      height: 36px;
-      border-radius: 9px;
-      border: 2px solid rgba(255,255,255,0.15);
-      cursor: pointer;
-    }
-
-    /* Modal for Inspired Templates */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.78);
-      backdrop-filter: blur(6px);
-      z-index: 200;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal-box {
-      background: #161c28;
-      border: 1px solid rgba(229, 193, 88, 0.35);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 420px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-    }
-
-    .template-option {
-      background: #1f2738;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 12px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      transition: 0.15s;
-    }
-
-    .template-option:hover, .template-option:active {
-      border-color: var(--gold-primary);
-      background: #263045;
-    }
-
-    /* Toggle Switch */
-    .switch-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استوديو التصميم الاحترافي</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&family=Amiri:wght@400;700&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-<div class="app-shell" id="app-shell">
-  <!-- Top Bar -->
-  <header class="top-bar">
-    <div class="brand-title">
-      <span>✦</span>
-      <span>استوديو البطاقات</span>
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-icon">✦</div>
+        <div>
+            <h1>استوديو التصميم</h1>
+            <span>مساحة إبداعك الخاصة</span>
+        </div>
     </div>
     <div class="top-actions">
-      <button class="btn-top" id="btn-open-templates">✨ قوالب مستوحاة</button>
-      <button class="btn-top" id="btn-fullscreen" title="ملء الشاشة">⛶ ملء الشاشة</button>
-      <button class="btn-top btn-gold" id="btn-export">⬇ حفظ PNG</button>
+        <button id="undoBtn" class="small-btn">↶</button>
+        <button id="redoBtn" class="small-btn">↷</button>
+        <button id="downloadBtn" class="download-btn">تحميل التصميم ↓</button>
     </div>
-  </header>
+</header>
 
-  <!-- Upper Stage (Card Preview) -->
-  <section class="stage-wrapper" id="stage-wrapper">
-    <div class="stage-grid-bg"></div>
+<main class="workspace">
 
-    <div class="stage-hud-top">
-      <div class="dim-badge" id="dim-badge">1000 × 600 px</div>
-      <div class="zoom-pill">
-        <button id="btn-zoom-out" title="تصغير المعاينة">−</button>
-        <span id="zoom-level-text">100%</span>
-        <button id="btn-zoom-in" title="تكبير المعاينة">+</button>
-        <button id="btn-zoom-reset" title="ملاءمة الشاشة">⟲</button>
-      </div>
-    </div>
-
-    <div id="card-scaler">
-      <div id="design-card">
-        <div id="card-bg-overlay"></div>
-        <div id="card-empty-hint">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="3" y="3" width="18" height="18" rx="3"/>
-            <path d="M12 8v8M8 12h8"/>
-          </svg>
-          <div style="font-size: 22px; font-weight: 700;">لوحة فارغة 100%</div>
-          <div style="font-size: 15px; margin-top: 4px;">ابدأ بإضافة نصوص أو صور من الأسفل، أو اختر "قوالب مستوحاة"</div>
-        </div>
-      </div>
-    </div>
-
-    <button class="floating-restore-btn" id="btn-restore-dock">
-      <span>▲</span>
-      <span>إظهار أدوات التصميم</span>
-    </button>
-  </section>
-
-  <!-- Lower Control Dock -->
-  <main class="controls-dock">
-    <nav class="tabs-nav">
-      <button class="tab-btn active" data-tab="tab-sizes">📐 المقاسات</button>
-      <button class="tab-btn" data-tab="tab-text">✍️ النصوص</button>
-      <button class="tab-btn" data-tab="tab-images">🖼️ الصور</button>
-      <button class="tab-btn" data-tab="tab-layers">🧊 الطبقات</button>
-      <button class="tab-btn" data-tab="tab-shadows">🌑 الظلال</button>
-      <button class="tab-btn" data-tab="tab-bg">🎨 الخلفية</button>
-    </nav>
-
-    <div class="tab-panels">
-      <!-- TAB 1: SIZES & DIMENSIONS -->
-      <div class="tab-pane active" id="tab-sizes">
-        <div class="control-card">
-          <div class="section-label">
-            <span>مقاسات جاهزة بضغطة واحدة</span>
-            <span style="color:var(--text-muted); font-size:10px;">تكيف تلقائي ذكي</span>
-          </div>
-          <div class="grid-2">
-            <button class="btn-pill active size-preset-btn" data-w="1000" data-h="600">💳 بطاقة أفقية (1000×600)</button>
-            <button class="btn-pill size-preset-btn" data-w="600" data-h="1000">📱 بطاقة طولية (600×1000)</button>
-            <button class="btn-pill size-preset-btn" data-w="1080" data-h="1080">🟦 بوست مربع (1080×1080)</button>
-            <button class="btn-pill size-preset-btn" data-w="1080" data-h="1920">📲 ستوري / واتساب (1080×1920)</button>
-            <button class="btn-pill size-preset-btn" data-w="1640" data-h="624" style="grid-column: span 2;">🖼️ غلاف عريض (1640×624)</button>
-          </div>
+    <section class="preview-area">
+        <div class="preview-heading">
+            <span>مساحة العمل</span>
+            <span id="canvasSizeLabel">1080 × 1080</span>
         </div>
 
-        <div class="control-card">
-          <div class="section-label"><span>مقاس حر مخصص (بالبكسل)</span></div>
-          <div class="grid-2">
-            <div>
-              <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">العرض (Width)</label>
-              <input type="number" id="custom-width" value="1000" min="200" max="4000">
+        <div class="canvas-wrapper">
+            <div id="designCanvas">
+                <div class="empty-message" id="emptyMessage">
+                    <span>✦</span>
+                    <strong>ابدأ تصميمك الآن</strong>
+                    <small>أضف نصًا أو صورة أو شكلًا</small>
+                </div>
             </div>
-            <div>
-              <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:4px;">الارتفاع (Height)</label>
-              <input type="number" id="custom-height" value="600" min="200" max="4000">
-            </div>
-          </div>
-          <button class="btn-action primary" id="btn-apply-custom-size">تطبيق المقاس المخصص</button>
-        </div>
-      </div>
-
-      <!-- TAB 2: TEXTS -->
-      <div class="tab-pane" id="tab-text">
-        <div class="control-card">
-          <div class="grid-2">
-            <button class="btn-action primary" id="btn-add-text">+ إضافة نص جديد</button>
-            <button class="btn-action" id="btn-add-gold-text">✨ نص ذهبي 3D</button>
-          </div>
-          <div style="font-size:11px; color:var(--text-muted); text-align:center;">
-            💡 انقر مرتين (Double Tap) على أي نص فوق البطاقة للكتابة الحرة المباشرة في مكانه
-          </div>
         </div>
 
-        <div class="control-card" id="text-editor-panel">
-          <div class="section-label"><span>خصائص النص المحدد</span></div>
-          <textarea id="inp-text-content" placeholder="اكتب النص هنا أو انقر مرتين على النص في اللوحة..."></textarea>
-
-          <div class="grid-2">
-            <div>
-              <label style="font-size:11px; color:var(--text-muted);">نوع الخط</label>
-              <select id="inp-text-font">
-                <option value="'Cairo', sans-serif">Cairo (عصري)</option>
-                <option value="'Amiri', serif">Amiri (كلاسيكي فاخر)</option>
-                <option value="'Aref Ruqaa', serif">Aref Ruqaa (رقعة فني)</option>
-                <option value="'Tajawal', sans-serif">Tajawal (ناعم)</option>
-                <option value="'Changa', sans-serif">Changa (هندسي)</option>
-                <option value="'Playfair Display', serif">Playfair (إنجليزي ملكي)</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:11px; color:var(--text-muted);">أيقونة مرافقة</label>
-              <select id="inp-text-icon">
-                <option value="">بدون أيقونة</option>
-                <option value="✦">✦ نجمة رباعية</option>
-                <option value="👑">👑 تاج ملكي</option>
-                <option value="📞">📞 هاتف</option>
-                <option value="📱">📱 جوال / واتساب</option>
-                <option value="📍">📍 موقع</option>
-                <option value="✉️">✉️ بريد</option>
-                <option value="💎">💎 جوهرة</option>
-                <option value="🌿">🌿 غصن</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="field-row">
-            <label>حجم الخط</label>
-            <input type="range" id="inp-text-size" min="14" max="150" value="42">
-            <span class="val-badge" id="val-text-size">42px</span>
-          </div>
-
-          <div class="field-row">
-            <label>المحاذاة</label>
-            <div class="grid-3" style="flex:1;">
-              <button class="btn-pill align-btn" data-align="right">يمين</button>
-              <button class="btn-pill align-btn active" data-align="center">وسط</button>
-              <button class="btn-pill align-btn" data-align="left">يسار</button>
-            </div>
-          </div>
-
-          <div class="field-row">
-            <label>اللون والنمط</label>
-            <div style="display:flex; align-items:center; gap:8px; flex:1;">
-              <input type="color" id="inp-text-color" value="#ffffff">
-              <button class="btn-pill" id="btn-toggle-gold3d" style="flex:1;">تفعيل الذهبي البارز 3D</button>
-            </div>
-          </div>
-
-          <div class="field-row">
-            <label>الحد الخارجي</label>
-            <input type="range" id="inp-text-stroke-w" min="0" max="8" step="0.5" value="0">
-            <input type="color" id="inp-text-stroke-c" value="#000000">
-          </div>
+        <div class="canvas-footer">
+            <span>اضغط على العنصر لتحديده</span>
+            <button id="clearBtn">مسح التصميم</button>
         </div>
-      </div>
+    </section>
 
-      <!-- TAB 3: IMAGES -->
-      <div class="tab-pane" id="tab-images">
-        <div class="control-card">
-          <input type="file" id="inp-file-upload" accept="image/*" multiple style="display:none;">
-          <button class="btn-action primary" id="btn-upload-image">📸 رفع صورة من جهازك (حتى 10 صور)</button>
+    <aside class="editor-panel">
+
+        <nav class="tabs">
+            <button class="tab active" data-tab="text">النصوص</button>
+            <button class="tab" data-tab="images">الصور</button>
+            <button class="tab" data-tab="shapes">الأشكال</button>
+            <button class="tab" data-tab="background">الخلفية</button>
+            <button class="tab" data-tab="settings">الإعدادات</button>
+        </nav>
+
+        <div class="panel-content">
+
+            <!-- النصوص -->
+            <section class="tab-content active" id="text">
+
+                <h3>إضافة نص جديد</h3>
+
+                <textarea id="newText" placeholder="اكتب النص الذي تريد إضافته هنا..."></textarea>
+
+                <button class="primary-btn" id="addTextBtn">＋ إضافة النص للتصميم</button>
+
+                <div class="divider"></div>
+
+                <h3>تعديل النص المحدد</h3>
+
+                <label>محتوى النص</label>
+                <textarea id="editText" placeholder="حدد نصًا من التصميم لتعديله..."></textarea>
+
+                <label>نوع الخط</label>
+                <select id="fontFamily">
+                    <option value="Cairo">Cairo</option>
+                    <option value="Tajawal">Tajawal</option>
+                    <option value="Amiri">Amiri</option>
+                    <option value="Almarai">Almarai</option>
+                    <option value="Arial">Arial</option>
+                </select>
+
+                <label>حجم الخط</label>
+                <input type="range" id="fontSize" min="12" max="180" value="45">
+                <div class="range-value" id="fontSizeValue">45px</div>
+
+                <label>لون النص</label>
+                <input type="color" id="textColor" value="#ffffff">
+
+                <label>محاذاة النص</label>
+                <div class="button-row">
+                    <button class="option-btn" data-align="right">يمين</button>
+                    <button class="option-btn" data-align="center">وسط</button>
+                    <button class="option-btn" data-align="left">يسار</button>
+                </div>
+
+                <div class="button-row">
+                    <button class="option-btn" id="boldBtn">عريض B</button>
+                    <button class="option-btn" id="deleteElementBtn">حذف العنصر</button>
+                </div>
+
+            </section>
+
+            <!-- الصور -->
+            <section class="tab-content" id="images">
+
+                <h3>إضافة صورة</h3>
+
+                <label class="upload-box">
+                    <span>＋</span>
+                    <strong>اختر صورة من هاتفك</strong>
+                    <small>PNG / JPG / WEBP</small>
+                    <input type="file" id="imageInput" accept="image/*">
+                </label>
+
+                <div class="divider"></div>
+
+                <h3>خصائص الصورة أو العنصر المحدد</h3>
+
+                <label>الحجم</label>
+                <input type="range" id="elementScale" min="10" max="200" value="100">
+                <div class="range-value" id="scaleValue">100%</div>
+
+                <label>الشفافية</label>
+                <input type="range" id="elementOpacity" min="10" max="100" value="100">
+                <div class="range-value" id="opacityValue">100%</div>
+
+                <label>الدوران</label>
+                <input type="range" id="elementRotate" min="-180" max="180" value="0">
+                <div class="range-value" id="rotateValue">0°</div>
+
+                <button class="primary-btn" id="deleteImageBtn">حذف العنصر المحدد</button>
+
+            </section>
+
+            <!-- الأشكال -->
+            <section class="tab-content" id="shapes">
+
+                <h3>إضافة شكل</h3>
+
+                <div class="shape-grid">
+                    <button class="shape-btn" data-shape="rectangle">▰<small>مستطيل</small></button>
+                    <button class="shape-btn" data-shape="circle">●<small>دائرة</small></button>
+                    <button class="shape-btn" data-shape="triangle">▲<small>مثلث</small></button>
+                    <button class="shape-btn" data-shape="line">━<small>خط</small></button>
+                </div>
+
+                <div class="divider"></div>
+
+                <label>لون الشكل</label>
+                <input type="color" id="shapeColor" value="#d9b65d">
+
+                <button class="primary-btn" id="addShapeBtn">إضافة الشكل</button>
+
+            </section>
+
+            <!-- الخلفية -->
+            <section class="tab-content" id="background">
+
+                <h3>لون الخلفية</h3>
+                <input type="color" id="backgroundColor" value="#ffffff">
+
+                <div class="divider"></div>
+
+                <h3>خلفيات جاهزة</h3>
+
+                <div class="background-grid">
+                    <button style="background:#ffffff" data-bg="#ffffff"></button>
+                    <button style="background:#070b18" data-bg="#070b18"></button>
+                    <button style="background:#102d32" data-bg="#102d32"></button>
+                    <button style="background:#f1eadb" data-bg="#f1eadb"></button>
+                    <button style="background:#d9b65d" data-bg="#d9b65d"></button>
+                    <button style="background:#dce9e4" data-bg="#dce9e4"></button>
+                    <button style="background:#e8d9d0" data-bg="#e8d9d0"></button>
+                    <button style="background:#253858" data-bg="#253858"></button>
+                </div>
+
+                <div class="divider"></div>
+
+                <label class="upload-box">
+                    <span>＋</span>
+                    <strong>إضافة صورة كخلفية</strong>
+                    <input type="file" id="backgroundImageInput" accept="image/*">
+                </label>
+
+            </section>
+
+            <!-- الإعدادات -->
+            <section class="tab-content" id="settings">
+
+                <h3>مقاس التصميم</h3>
+
+                <label>اختر المقاس</label>
+                <select id="canvasPreset">
+                    <option value="1080,1080">منشور مربع 1080 × 1080</option>
+                    <option value="1080,1350">منشور طولي 1080 × 1350</option>
+                    <option value="1080,1920">ستوري 1080 × 1920</option>
+                    <option value="1920,1080">عرض أفقي 1920 × 1080</option>
+                    <option value="1200,628">غلاف 1200 × 628</option>
+                </select>
+
+                <div class="divider"></div>
+
+                <h3>إدارة العنصر</h3>
+
+                <button class="primary-btn" id="duplicateBtn">نسخ العنصر المحدد</button>
+                <button class="primary-btn secondary-btn" id="frontBtn">إحضار للأمام</button>
+                <button class="primary-btn secondary-btn" id="backBtn">إرسال للخلف</button>
+
+                <div class="divider"></div>
+
+                <h3>حفظ المشروع</h3>
+                <button class="primary-btn secondary-btn" id="saveProjectBtn">حفظ المشروع على الجهاز</button>
+                <label class="upload-box">
+                    <span>↥</span>
+                    <strong>فتح مشروع محفوظ</strong>
+                    <input type="file" id="loadProjectInput" accept=".json">
+                </label>
+
+            </section>
+
         </div>
+    </aside>
 
-        <div class="control-card" id="image-editor-panel">
-          <div class="section-label"><span>إعدادات الصورة المحددة</span></div>
-          
-          <div class="section-label" style="color:var(--text-muted); font-weight:600;">شكل الإطار المستوحى</div>
-          <div class="grid-2">
-            <button class="btn-pill img-shape-btn active" data-shape="shape-arch">🕌 قوس علوي (Arch)</button>
-            <button class="btn-pill img-shape-btn" data-shape="shape-circle">⚪ دائري</button>
-            <button class="btn-pill img-shape-btn" data-shape="shape-rounded">▢ مربع ناعم</button>
-            <button class="btn-pill img-shape-btn" data-shape="shape-rect">▭ مستطيل حر</button>
-          </div>
+</main>
 
-          <div class="field-row">
-            <label>تكبير الداخل</label>
-            <input type="range" id="inp-img-inner-zoom" min="1" max="3" step="0.05" value="1">
-            <span class="val-badge" id="val-img-zoom">1.0x</span>
-          </div>
+<div class="toast" id="toast"></div>
 
-          <div class="field-row">
-            <label>إطار ذهبي</label>
-            <input type="range" id="inp-img-border" min="0" max="14" value="3">
-            <input type="color" id="inp-img-border-color" value="#e5c158">
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 4: LAYERS & GLASS -->
-      <div class="tab-pane" id="tab-layers">
-        <div class="control-card">
-          <div class="section-label"><span>إضافة طبقات جمالية</span></div>
-          <div class="grid-3">
-            <button class="btn-action" id="btn-add-glass">🧊 لوح زجاجي</button>
-            <button class="btn-action" id="btn-add-frame">🖼️ إطار ذهبي</button>
-            <button class="btn-action" id="btn-add-wave">🌊 موجة لونية</button>
-          </div>
-        </div>
-
-        <div class="control-card">
-          <div class="section-label"><span>تعديل العنصر / الطبقة المحددة</span></div>
-          <div class="field-row">
-            <label>الضبابية Blur</label>
-            <input type="range" id="inp-layer-blur" min="0" max="40" value="14">
-            <span class="val-badge" id="val-layer-blur">14px</span>
-          </div>
-          <div class="field-row">
-            <label>الشفافية</label>
-            <input type="range" id="inp-item-opacity" min="0.1" max="1" step="0.05" value="1">
-            <span class="val-badge" id="val-item-opacity">100%</span>
-          </div>
-          <div class="field-row">
-            <label>استدارة الحواف</label>
-            <input type="range" id="inp-layer-radius" min="0" max="200" value="22">
-            <span class="val-badge" id="val-layer-radius">22px</span>
-          </div>
-          <div class="field-row">
-            <label>الدوران</label>
-            <input type="range" id="inp-item-rotate" min="-180" max="180" value="0">
-            <span class="val-badge" id="val-item-rotate">0°</span>
-          </div>
-
-          <div class="grid-3" style="margin-top:4px;">
-            <button class="btn-action" id="btn-layer-up">⬆ للأمام</button>
-            <button class="btn-action" id="btn-layer-down">⬇ للخلف</button>
-            <button class="btn-action danger" id="btn-delete-item">🗑️ حذف</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 5: SHADOWS -->
-      <div class="tab-pane" id="tab-shadows">
-        <div class="control-card">
-          <div class="section-label">
-            <span>قسم الظلال الاحترافي (لأي نص أو صورة أو طبقة)</span>
-            <label class="switch-wrap" style="color:var(--text-main); font-size:11px;">
-              <input type="checkbox" id="chk-shadow-enable">
-              <span>تفعيل الظل</span>
-            </label>
-          </div>
-
-          <div class="field-row">
-            <label>الضبابية Blur</label>
-            <input type="range" id="inp-sh-blur" min="0" max="60" value="18">
-            <span class="val-badge" id="val-sh-blur">18px</span>
-          </div>
-
-          <div class="field-row">
-            <label>القوة Opacity</label>
-            <input type="range" id="inp-sh-opacity" min="0" max="1" step="0.05" value="0.65">
-            <span class="val-badge" id="val-sh-opacity">65%</span>
-          </div>
-
-          <div class="field-row">
-            <label>إزاحة أفقية X</label>
-            <input type="range" id="inp-sh-x" min="-50" max="50" value="0">
-            <span class="val-badge" id="val-sh-x">0px</span>
-          </div>
-
-          <div class="field-row">
-            <label>إزاحة رأسية Y</label>
-            <input type="range" id="inp-sh-y" min="-50" max="50" value="10">
-            <span class="val-badge" id="val-sh-y">10px</span>
-          </div>
-
-          <div class="field-row">
-            <label>لون الظل</label>
-            <input type="color" id="inp-sh-color" value="#000000">
-            <button class="btn-pill" id="btn-sh-gold-glow" style="flex:1;">✨ توهج ذهبي دافئ</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 6: BACKGROUND -->
-      <div class="tab-pane" id="tab-bg">
-        <div class="control-card">
-          <div class="section-label"><span>خلفيات فاخرة جاهزة</span></div>
-          <div class="bg-swatches">
-            <div class="swatch" data-bg="linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #090d16 100%)" style="background:linear-gradient(135deg, #0f172a, #1e293b);"></div>
-            <div class="swatch" data-bg="linear-gradient(135deg, #1c1917 0%, #292524 50%, #0c0a09 100%)" style="background:linear-gradient(135deg, #1c1917, #292524);"></div>
-            <div class="swatch" data-bg="linear-gradient(135deg, #062825 0%, #0f4c45 50%, #041715 100%)" style="background:linear-gradient(135deg, #062825, #0f4c45);"></div>
-            <div class="swatch" data-bg="linear-gradient(135deg, #2a0a18 0%, #4c112a 50%, #14040b 100%)" style="background:linear-gradient(135deg, #2a0a18, #4c112a);"></div>
-            <div class="swatch" data-bg="linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)" style="background:linear-gradient(135deg, #f8fafc, #cbd5e1);"></div>
-          </div>
-
-          <div class="field-row" style="margin-top:6px;">
-            <label>تدرج مخصص</label>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <input type="color" id="inp-bg-c1" value="#0f172a">
-              <input type="color" id="inp-bg-c2" value="#1e293b">
-              <button class="btn-pill" id="btn-apply-custom-bg">تطبيق</button>
-            </div>
-          </div>
-
-          <div class="grid-2" style="margin-top:6px;">
-            <input type="file" id="inp-bg-image" accept="image/*" style="display:none;">
-            <button class="btn-action" id="btn-upload-bg-img">🖼️ صورة كخلفية</button>
-            <button class="btn-action danger" id="btn-clear-canvas">🧹 مسح اللوحة بالكامل</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-</div>
-
-<!-- Inspired Templates Modal -->
-<div class="modal-backdrop" id="templates-modal">
-  <div class="modal-box">
-    <div class="section-label" style="font-size:14px;">
-      <span>✨ قوالب مستوحاة جاهزة</span>
-      <button class="btn-pill" id="btn-close-modal">✕ إغلاق</button>
-    </div>
-    <p style="font-size:12px; color:var(--text-muted); margin:0;">
-      اختر هيكلاً مستوحى من الصورتين لتعبئة اللوحة فوراً وتعديلها بحرية تامة:
-    </p>
-
-    <div class="template-option" id="tpl-royal-gold">
-      <strong style="color:var(--gold-primary); font-size:13px;">1. الهيكل المؤسسي الفاخر (مستوحى من الصورة الأولى)</strong>
-      <span style="font-size:11.5px; color:var(--text-muted);">إطار ذهبي خارجي، قوس علوي للصورة الشخصية، نصوص ذهبية 3D، وشريط معلومات الاتصال.</span>
-    </div>
-
-    <div class="template-option" id="tpl-modern-circle">
-      <strong style="color:#38bdf8; font-size:13px;">2. هيكل التهنئة الشخصية (مستوحى من الصورة الثانية)</strong>
-      <span style="font-size:11.5px; color:var(--text-muted);">صورة دائرية بإطار ذهبي في المنتصف، عنوان بارز، خط فاصل دقيق، ووصف توضيحي.</span>
-    </div>
-  </div>
-</div>
-
-<script>
-  // State Management
-  const state = {
-    cardWidth: 1000,
-    cardHeight: 600,
-    userZoomMultiplier: 1,
-    baseFitScale: 1,
-    selectedId: null,
-    zIndexCounter: 10,
-    imageCount: 0
-  };
-
-  const appShell = document.getElementById('app-shell');
-  const stageWrapper = document.getElementById('stage-wrapper');
-  const cardScaler = document.getElementById('card-scaler');
-  const designCard = document.getElementById('design-card');
-  const dimBadge = document.getElementById('dim-badge');
-  const zoomLevelText = document.getElementById('zoom-level-text');
-  const emptyHint = document.getElementById('card-empty-hint');
-
-  // Auto-Fit Card inside Stage
-  function updateStageFit() {
-    const rect = stageWrapper.getBoundingClientRect();
-    const padX = 28;
-    const padY = 48;
-    const availW = Math.max(120, rect.width - padX);
-    const availH = Math.max(120, rect.height - padY);
-
-    const scaleX = availW / state.cardWidth;
-    const scaleY = availH / state.cardHeight;
-    state.baseFitScale = Math.min(scaleX, scaleY, 1);
-
-    const finalScale = state.baseFitScale * state.userZoomMultiplier;
-    cardScaler.style.transform = `scale(${finalScale})`;
-    zoomLevelText.textContent = `${Math.round(state.userZoomMultiplier * 100)}%`;
-  }
-
-  function setCardDimensions(w, h) {
-    state.cardWidth = Math.max(200, Math.min(4000, parseInt(w) || 1000));
-    state.cardHeight = Math.max(200, Math.min(4000, parseInt(h) || 600));
-    designCard.style.width = state.cardWidth + 'px';
-    designCard.style.height = state.cardHeight + 'px';
-    dimBadge.textContent = `${state.cardWidth} × ${state.cardHeight} px`;
-    document.getElementById('custom-width').value = state.cardWidth;
-    document.getElementById('custom-height').value = state.cardHeight;
-    state.userZoomMultiplier = 1;
-    updateStageFit();
-  }
-
-  window.addEventListener('resize', updateStageFit);
-  setTimeout(updateStageFit, 50);
-
-  // Fullscreen & Zoom Controls
-  document.getElementById('btn-fullscreen').addEventListener('click', () => {
-    appShell.classList.add('fullscreen-mode');
-    deselectAll();
-    setTimeout(updateStageFit, 290);
-  });
-
-  document.getElementById('btn-restore-dock').addEventListener('click', () => {
-    appShell.classList.remove('fullscreen-mode');
-    setTimeout(updateStageFit, 290);
-  });
-
-  document.getElementById('btn-zoom-in').addEventListener('click', () => {
-    state.userZoomMultiplier = Math.min(2.5, +(state.userZoomMultiplier + 0.15).toFixed(2));
-    updateStageFit();
-  });
-
-  document.getElementById('btn-zoom-out').addEventListener('click', () => {
-    state.userZoomMultiplier = Math.max(0.4, +(state.userZoomMultiplier - 0.15).toFixed(2));
-    updateStageFit();
-  });
-
-  document.getElementById('btn-zoom-reset').addEventListener('click', () => {
-    state.userZoomMultiplier = 1;
-    updateStageFit();
-  });
-
-  // Tabs Navigation
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.tab).classList.add('active');
-    });
-  });
-
-  function switchTab(tabId) {
-    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
-    if (btn) btn.click();
-  }
-
-  // Size Presets
-  document.querySelectorAll('.size-preset-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.size-preset-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      setCardDimensions(btn.dataset.w, btn.dataset.h);
-    });
-  });
-
-  document.getElementById('btn-apply-custom-size').addEventListener('click', () => {
-    document.querySelectorAll('.size-preset-btn').forEach(b => b.classList.remove('active'));
-    setCardDimensions(
-      document.getElementById('custom-width').value,
-      document.getElementById('custom-height').value
-    );
-  });
-
-  function checkEmptyState() {
-    const items = designCard.querySelectorAll('.canvas-item');
-    emptyHint.style.display = items.length === 0 ? 'flex' : 'none';
-  }
-
-  function selectItem(el) {
-    deselectAll();
-    if (!el) return;
-    el.classList.add('selected');
-    state.selectedId = el.dataset.id;
-    syncControlsFromItem(el);
-  }
-
-  function deselectAll() {
-    document.querySelectorAll('.canvas-item').forEach(item => {
-      item.classList.remove('selected');
-      const editable = item.querySelector('.item-text-content');
-      if (editable) {
-        editable.contentEditable = "false";
-        item.classList.remove('editing-text');
-      }
-    });
-    state.selectedId = null;
-  }
-
-  stageWrapper.addEventListener('pointerdown', (e) => {
-    if (e.target === stageWrapper || e.target === designCard || e.target.id === 'card-bg-overlay') {
-      deselectAll();
-    }
-  });
-
-  function getSelectedItem() {
-    if (!state.selectedId) return null;
-    return designCard.querySelector(`.canvas-item[data-id="${state.selectedId}"]`);
-  }
-
-  function applyItemTransform(el) {
-    const x = parseFloat(el.dataset.x || 0);
-    const y = parseFloat(el.dataset.y || 0);
-    const scale = parseFloat(el.dataset.scale || 1);
-    const rotate = parseFloat(el.dataset.rotate || 0);
-    el.style.transform = `translate(${x}px, ${y}px) scale(${scale}) rotate(${rotate}deg)`;
-  }
-
-  function applyItemShadow(el) {
-    const enabled = el.dataset.shEnable === 'true';
-    if (!enabled) {
-      el.style.filter = 'none';
-      return;
-    }
-    const blur = el.dataset.shBlur || 18;
-    const opacity = parseFloat(el.dataset.shOpacity || 0.65);
-    const x = el.dataset.shX || 0;
-    const y = el.dataset.shY || 10;
-    const hex = el.dataset.shColor || '#000000';
-    const r = parseInt(hex.slice(1, 3), 16) || 0;
-    const g = parseInt(hex.slice(3, 5), 16) || 0;
-    const b = parseInt(hex.slice(5, 7), 16) || 0;
-    el.style.filter = `drop-shadow(${x}px ${y}px ${blur}px rgba(${r}, ${g}, ${b}, ${opacity}))`;
-  }
-
-  // Gestures & Dragging
-  function attachItemInteractions(el) {
-    const handle = document.createElement('div');
-    handle.className = 'item-handle';
-    el.appendChild(handle);
-
-    let isDragging = false;
-    let isResizing = false;
-    let startX = 0, startY = 0;
-    let initItemX = 0, initItemY = 0;
-    let initScale = 1, initDist = 0, initAngle = 0, initRotate = 0;
-    const activePointers = new Map();
-
-    let lastTapTime = 0;
-    el.addEventListener('pointerup', (e) => {
-      if (el.dataset.type !== 'text') return;
-      const now = Date.now();
-      if (now - lastTapTime < 320) {
-        const contentDiv = el.querySelector('.item-text-content');
-        el.classList.add('editing-text');
-        contentDiv.contentEditable = "true";
-        contentDiv.focus();
-        contentDiv.oninput = () => {
-          document.getElementById('inp-text-content').value = contentDiv.innerText;
-        };
-      }
-      lastTapTime = now;
-    });
-
-    handle.addEventListener('pointerdown', (e) => {
-      e.stopPropagation();
-      selectItem(el);
-      isResizing = true;
-      handle.setPointerCapture(e.pointerId);
-      const rect = el.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      initDist = Math.hypot(e.clientX - centerX, e.clientY - centerY) || 1;
-      initScale = parseFloat(el.dataset.scale || 1);
-    });
-
-    handle.addEventListener('pointermove', (e) => {
-      if (!isResizing) return;
-      e.stopPropagation();
-      const rect = el.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const currDist = Math.hypot(e.clientX - centerX, e.clientY - centerY);
-      const newScale = Math.max(0.25, Math.min(5, initScale * (currDist / initDist)));
-      el.dataset.scale = newScale.toFixed(3);
-      applyItemTransform(el);
-    });
-
-    handle.addEventListener('pointerup', (e) => {
-      isResizing = false;
-      handle.releasePointerCapture(e.pointerId);
-    });
-
-    el.addEventListener('pointerdown', (e) => {
-      if (e.target === handle) return;
-      if (el.classList.contains('editing-text')) return;
-
-      e.stopPropagation();
-      selectItem(el);
-      el.setPointerCapture(e.pointerId);
-      activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-
-      if (activePointers.size === 1) {
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        initItemX = parseFloat(el.dataset.x || 0);
-        initItemY = parseFloat(el.dataset.y || 0);
-      } else if (activePointers.size === 2) {
-        isDragging = false;
-        const pts = Array.from(activePointers.values());
-        initDist = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y) || 1;
-        initAngle = Math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x) * 180 / Math.PI;
-        initScale = parseFloat(el.dataset.scale || 1);
-        initRotate = parseFloat(el.dataset.rotate || 0);
-      }
-    });
-
-    el.addEventListener('pointermove', (e) => {
-      if (!activePointers.has(e.pointerId)) return;
-      activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-
-      const currentStageScale = state.baseFitScale * state.userZoomMultiplier;
-
-      if (activePointers.size === 1 && isDragging) {
-        const dx = (e.clientX - startX) / currentStageScale;
-        const dy = (e.clientY - startY) / currentStageScale;
-        el.dataset.x = initItemX + dx;
-        el.dataset.y = initItemY + dy;
-        applyItemTransform(el);
-      } else if (activePointers.size === 2) {
-        const pts = Array.from(activePointers.values());
-        const currDist = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
-        const currAngle = Math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x) * 180 / Math.PI;
-
-        const newScale = Math.max(0.25, Math.min(5, initScale * (currDist / initDist)));
-        const newRotate = Math.round(initRotate + (currAngle - initAngle));
-
-        el.dataset.scale = newScale.toFixed(3);
-        el.dataset.rotate = newRotate;
-        document.getElementById('inp-item-rotate').value = ((newRotate + 180) % 360) - 180;
-        document.getElementById('val-item-rotate').textContent = newRotate + '°';
-        applyItemTransform(el);
-      }
-    });
-
-    const endPointer = (e) => {
-      activePointers.delete(e.pointerId);
-      if (activePointers.size === 0) isDragging = false;
-    };
-
-    el.addEventListener('pointerup', endPointer);
-    el.addEventListener('pointercancel', endPointer);
-  }
-
-  // Element Creation
-  function createTextElement(opts = {}) {
-    const id = 'item-' + Date.now() + Math.floor(Math.random() * 1000);
-    const el = document.createElement('div');
-    el.className = 'canvas-item item-text-box';
-    el.dataset.id = id;
-    el.dataset.type = 'text';
-    el.dataset.x = opts.x ?? (state.cardWidth / 2 - 140);
-    el.dataset.y = opts.y ?? (state.cardHeight / 2 - 35);
-    el.dataset.scale = opts.scale ?? 1;
-    el.dataset.rotate = opts.rotate ?? 0;
-    el.dataset.gold3d = opts.gold3d ? 'true' : 'false';
-    el.dataset.icon = opts.icon || '';
-    el.style.zIndex = opts.zIndex ?? (++state.zIndexCounter);
-    el.style.fontFamily = opts.font || "'Cairo', sans-serif";
-    el.style.fontSize = (opts.size || 44) + 'px';
-    el.style.fontWeight = '700';
-    el.style.color = opts.color || '#ffffff';
-    el.style.textAlign = opts.align || 'center';
-
-    const iconSpan = document.createElement('span');
-    iconSpan.textContent = opts.icon || '';
-
-    const textDiv = document.createElement('div');
-    textDiv.className = 'item-text-content' + (opts.gold3d ? ' gold-3d-text' : '');
-    textDiv.innerText = opts.text || 'نص جديد قابل للتعديل';
-
-    el.appendChild(iconSpan);
-    el.appendChild(textDiv);
-
-    if (opts.shadow) {
-      el.dataset.shEnable = 'true';
-      el.dataset.shBlur = opts.shBlur ?? 14;
-      el.dataset.shOpacity = opts.shOpacity ?? 0.7;
-      el.dataset.shX = opts.shX ?? 0;
-      el.dataset.shY = opts.shY ?? 6;
-      el.dataset.shColor = opts.shColor ?? '#000000';
-      applyItemShadow(el);
-    }
-
-    designCard.appendChild(el);
-    applyItemTransform(el);
-    attachItemInteractions(el);
-    checkEmptyState();
-    selectItem(el);
-    return el;
-  }
-
-  document.getElementById('btn-add-text').addEventListener('click', () => {
-    createTextElement({ text: 'اكتب نصك هنا', size: 44, gold3d: false });
-  });
-
-  document.getElementById('btn-add-gold-text').addEventListener('click', () => {
-    createTextElement({ text: 'عنوان ذهبي فاخر', size: 54, gold3d: true, font: "'Amiri', serif" });
-  });
-
-  function createImageElement(src, opts = {}) {
-    if (state.imageCount >= 10) {
-      alert('الحد الأقصى هو 10 صور في التصميم الواحد.');
-      return;
-    }
-    state.imageCount++;
-    const id = 'item-' + Date.now() + Math.floor(Math.random() * 1000);
-    const el = document.createElement('div');
-    el.className = `canvas-item item-image-frame ${opts.shape || 'shape-arch'}`;
-    el.dataset.id = id;
-    el.dataset.type = 'image';
-    el.dataset.x = opts.x ?? (state.cardWidth / 2 - 120);
-    el.dataset.y = opts.y ?? (state.cardHeight / 2 - 120);
-    el.dataset.scale = opts.scale ?? 1;
-    el.dataset.rotate = opts.rotate ?? 0;
-    el.dataset.innerZoom = 1;
-    el.style.zIndex = opts.zIndex ?? (++state.zIndexCounter);
-    el.style.width = (opts.w || 250) + 'px';
-    el.style.height = (opts.h || 280) + 'px';
-    el.style.border = `${opts.border ?? 3}px solid ${opts.borderColor || '#e5c158'}`;
-
-    const img = document.createElement('img');
-    img.src = src;
-    el.appendChild(img);
-
-    designCard.appendChild(el);
-    applyItemTransform(el);
-    attachItemInteractions(el);
-    checkEmptyState();
-    selectItem(el);
-    switchTab('tab-images');
-    return el;
-  }
-
-  document.getElementById('btn-upload-image').addEventListener('click', () => {
-    document.getElementById('inp-file-upload').click();
-  });
-
-  document.getElementById('inp-file-upload').addEventListener('change', (e) => {
-    const files = Array.from(e.target.files || []);
-    files.forEach((file, idx) => {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        createImageElement(ev.target.result, {
-          x: (state.cardWidth / 2 - 125) + idx * 25,
-          y: (state.cardHeight / 2 - 140) + idx * 25
-        });
-      };
-      reader.readAsDataURL(file);
-    });
-    e.target.value = '';
-  });
-
-  function createLayerElement(kind, opts = {}) {
-    const id = 'item-' + Date.now() + Math.floor(Math.random() * 1000);
-    const el = document.createElement('div');
-    el.className = `canvas-item item-layer-box layer-${kind}`;
-    el.dataset.id = id;
-    el.dataset.type = 'layer';
-    el.dataset.layerKind = kind;
-    el.dataset.x = opts.x ?? (state.cardWidth / 2 - 180);
-    el.dataset.y = opts.y ?? (state.cardHeight / 2 - 110);
-    el.dataset.scale = opts.scale ?? 1;
-    el.dataset.rotate = opts.rotate ?? 0;
-    el.style.width = (opts.w || 380) + 'px';
-    el.style.height = (opts.h || 220) + 'px';
-    el.style.zIndex = opts.zIndex ?? (++state.zIndexCounter);
-
-    if (opts.radius !== undefined) el.style.borderRadius = opts.radius + 'px';
-    if (opts.blur !== undefined) {
-      el.style.backdropFilter = `blur(${opts.blur}px)`;
-      el.style.webkitBackdropFilter = `blur(${opts.blur}px)`;
-    }
-
-    designCard.appendChild(el);
-    applyItemTransform(el);
-    attachItemInteractions(el);
-    checkEmptyState();
-    selectItem(el);
-    return el;
-  }
-
-  document.getElementById('btn-add-glass').addEventListener('click', () => createLayerElement('glass'));
-  document.getElementById('btn-add-frame').addEventListener('click', () => createLayerElement('gold-frame'));
-  document.getElementById('btn-add-wave').addEventListener('click', () => createLayerElement('wave', { w: 420, h: 420 }));
-
-  // Inspector Sync
-  function syncControlsFromItem(el) {
-    if (!el) return;
-    const op = parseFloat(el.style.opacity || 1);
-    document.getElementById('inp-item-opacity').value = op;
-    document.getElementById('val-item-opacity').textContent = Math.round(op * 100) + '%';
-
-    const rot = parseFloat(el.dataset.rotate || 0);
-    document.getElementById('inp-item-rotate').value = rot;
-    document.getElementById('val-item-rotate').textContent = rot + '°';
-
-    const shOn = el.dataset.shEnable === 'true';
-    document.getElementById('chk-shadow-enable').checked = shOn;
-    document.getElementById('inp-sh-blur').value = el.dataset.shBlur || 18;
-    document.getElementById('val-sh-blur').textContent = (el.dataset.shBlur || 18) + 'px';
-    document.getElementById('inp-sh-opacity').value = el.dataset.shOpacity || 0.65;
-    document.getElementById('val-sh-opacity').textContent = Math.round((el.dataset.shOpacity || 0.65) * 100) + '%';
-    document.getElementById('inp-sh-x').value = el.dataset.shX || 0;
-    document.getElementById('val-sh-x').textContent = (el.dataset.shX || 0) + 'px';
-    document.getElementById('inp-sh-y').value = el.dataset.shY || 10;
-    document.getElementById('val-sh-y').textContent = (el.dataset.shY || 10) + 'px';
-    document.getElementById('inp-sh-color').value = el.dataset.shColor || '#000000';
-
-    if (el.dataset.type === 'text') {
-      const contentDiv = el.querySelector('.item-text-content');
-      document.getElementById('inp-text-content').value = contentDiv.innerText;
-      const sz = parseInt(el.style.fontSize) || 42;
-      document.getElementById('inp-text-size').value = sz;
-      document.getElementById('val-text-size').textContent = sz + 'px';
-      document.getElementById('inp-text-icon').value = el.dataset.icon || '';
-      document.getElementById('btn-toggle-gold3d').classList.toggle('active', el.dataset.gold3d === 'true');
-
-      document.querySelectorAll('.align-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.align === (el.style.textAlign || 'center'));
-      });
-    } else if (el.dataset.type === 'image') {
-      document.querySelectorAll('.img-shape-btn').forEach(b => {
-        b.classList.toggle('active', el.classList.contains(b.dataset.shape));
-      });
-      const iz = parseFloat(el.dataset.innerZoom || 1);
-      document.getElementById('inp-img-inner-zoom').value = iz;
-      document.getElementById('val-img-zoom').textContent = iz.toFixed(1) + 'x';
-    }
-  }
-
-  // Text Listeners
-  document.getElementById('inp-text-content').addEventLi
+<script src="script.js"></script>
+</body>
+  </html>
