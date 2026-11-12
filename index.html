@@ -1,237 +1,319 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>استوديو التصميم الاحترافي</title>
-<link rel="stylesheet" href="style.css">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&family=Amiri:wght@400;700&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101827">
+    <title>استوديو الإبداع | Creative Studio</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Changa:wght@300;400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=Tajawal:wght@300;400;500;600;700;800;900&family=Readex+Pro:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
 </head>
+
 <body>
 
 <header class="topbar">
     <div class="brand">
         <div class="brand-icon">✦</div>
         <div>
-            <h1>استوديو التصميم</h1>
-            <span>مساحة إبداعك الخاصة</span>
+            <h1>استوديو الإبداع</h1>
+            <span>CREATIVE DESIGN STUDIO</span>
         </div>
     </div>
+
+    <input id="projectName" class="project-name" value="تصميم جديد">
+
     <div class="top-actions">
-        <button id="undoBtn" class="small-btn">↶</button>
-        <button id="redoBtn" class="small-btn">↷</button>
-        <button id="downloadBtn" class="download-btn">تحميل التصميم ↓</button>
+        <button id="undoBtn" class="icon-btn">↶</button>
+        <button id="redoBtn" class="icon-btn">↷</button>
+        <button id="saveBtn" class="soft-btn">حفظ المشروع</button>
+        <button id="exportBtn" class="gold-btn">تصدير التصميم ↓</button>
     </div>
 </header>
 
 <main class="workspace">
 
-    <section class="preview-area">
-        <div class="preview-heading">
-            <span>مساحة العمل</span>
-            <span id="canvasSizeLabel">1080 × 1080</span>
-        </div>
-
-        <div class="canvas-wrapper">
-            <div id="designCanvas">
-                <div class="empty-message" id="emptyMessage">
-                    <span>✦</span>
-                    <strong>ابدأ تصميمك الآن</strong>
-                    <small>أضف نصًا أو صورة أو شكلًا</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="canvas-footer">
-            <span>اضغط على العنصر لتحديده</span>
-            <button id="clearBtn">مسح التصميم</button>
-        </div>
-    </section>
-
-    <aside class="editor-panel">
+    <aside class="sidebar">
 
         <nav class="tabs">
-            <button class="tab active" data-tab="text">النصوص</button>
+            <button class="tab active" data-tab="sizes">المقاسات</button>
+            <button class="tab" data-tab="text">النصوص</button>
             <button class="tab" data-tab="images">الصور</button>
             <button class="tab" data-tab="shapes">الأشكال</button>
             <button class="tab" data-tab="background">الخلفية</button>
-            <button class="tab" data-tab="settings">الإعدادات</button>
+            <button class="tab" data-tab="layers">الطبقات</button>
         </nav>
 
-        <div class="panel-content">
+        <div class="panel">
 
-            <!-- النصوص -->
-            <section class="tab-content active" id="text">
+            <!-- المقاسات -->
 
-                <h3>إضافة نص جديد</h3>
+            <section class="tab-content active" id="sizes">
+                <h3>مقاسات التصميم الجاهزة</h3>
 
-                <textarea id="newText" placeholder="اكتب النص الذي تريد إضافته هنا..."></textarea>
+                <input id="presetSearch" placeholder="ابحث عن مقاس...">
 
-                <button class="primary-btn" id="addTextBtn">＋ إضافة النص للتصميم</button>
+                <div id="presetList" class="preset-grid"></div>
 
                 <div class="divider"></div>
 
-                <h3>تعديل النص المحدد</h3>
+                <h3>مقاس مخصص</h3>
 
-                <label>محتوى النص</label>
-                <textarea id="editText" placeholder="حدد نصًا من التصميم لتعديله..."></textarea>
+                <div class="two-cols">
+                    <div>
+                        <label>العرض</label>
+                        <input type="number" id="customWidth" value="1080">
+                    </div>
 
-                <label>نوع الخط</label>
+                    <div>
+                        <label>الارتفاع</label>
+                        <input type="number" id="customHeight" value="1080">
+                    </div>
+                </div>
+
+                <button id="applySize" class="primary-btn">تطبيق المقاس</button>
+            </section>
+
+            <!-- النصوص -->
+
+            <section class="tab-content" id="text">
+                <h3>إضافة نص</h3>
+
+                <textarea id="newText" placeholder="اكتب النص هنا..."></textarea>
+
+                <button id="addText" class="primary-btn">＋ إضافة النص</button>
+
+                <div class="divider"></div>
+
+                <h3>تنسيق النص المحدد</h3>
+
+                <label>الخط</label>
+
                 <select id="fontFamily">
                     <option value="Cairo">Cairo</option>
                     <option value="Tajawal">Tajawal</option>
+                    <option value="Alexandria">Alexandria</option>
                     <option value="Amiri">Amiri</option>
-                    <option value="Almarai">Almarai</option>
+                    <option value="Changa">Changa</option>
+                    <option value="IBM Plex Sans Arabic">IBM Plex Sans Arabic</option>
+                    <option value="Noto Kufi Arabic">Noto Kufi Arabic</option>
+                    <option value="Readex Pro">Readex Pro</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Poppins">Poppins</option>
+                    <option value="Playfair Display">Playfair Display</option>
                     <option value="Arial">Arial</option>
                 </select>
 
                 <label>حجم الخط</label>
-                <input type="range" id="fontSize" min="12" max="180" value="45">
-                <div class="range-value" id="fontSizeValue">45px</div>
+                <input type="number" id="fontSize" value="60" min="8" max="500">
 
                 <label>لون النص</label>
-                <input type="color" id="textColor" value="#ffffff">
+                <input type="color" id="textColor" value="#172033">
+
+                <label>وزن الخط</label>
+                <select id="fontWeight">
+                    <option value="400">عادي</option>
+                    <option value="500">متوسط</option>
+                    <option value="600">شبه عريض</option>
+                    <option value="700" selected>عريض</option>
+                    <option value="800">ثقيل</option>
+                    <option value="900">أسود</option>
+                </select>
 
                 <label>محاذاة النص</label>
                 <div class="button-row">
-                    <button class="option-btn" data-align="right">يمين</button>
-                    <button class="option-btn" data-align="center">وسط</button>
-                    <button class="option-btn" data-align="left">يسار</button>
+                    <button data-align="right">يمين</button>
+                    <button data-align="center">وسط</button>
+                    <button data-align="left">يسار</button>
                 </div>
+
+                <label>حدود النص</label>
+                <input type="color" id="textStroke" value="#ffffff">
+
+                <label>سُمك الحدود</label>
+                <input type="number" id="textStrokeWidth" value="0" min="0" max="30">
+
+                <label>شفافية النص</label>
+                <input type="range" id="textOpacity" min="0" max="100" value="100">
 
                 <div class="button-row">
-                    <button class="option-btn" id="boldBtn">عريض B</button>
-                    <button class="option-btn" id="deleteElementBtn">حذف العنصر</button>
+                    <button id="boldBtn">عريض B</button>
+                    <button id="italicBtn">مائل I</button>
                 </div>
 
+                <button id="deleteText" class="danger-btn">حذف النص</button>
             </section>
 
             <!-- الصور -->
-            <section class="tab-content" id="images">
 
+            <section class="tab-content" id="images">
                 <h3>إضافة صورة</h3>
 
                 <label class="upload-box">
                     <span>＋</span>
-                    <strong>اختر صورة من هاتفك</strong>
-                    <small>PNG / JPG / WEBP</small>
+                    <b>اختيار صورة من الجهاز</b>
+                    <small>PNG - JPG - WEBP</small>
                     <input type="file" id="imageInput" accept="image/*">
                 </label>
 
                 <div class="divider"></div>
 
-                <h3>خصائص الصورة أو العنصر المحدد</h3>
-
-                <label>الحجم</label>
-                <input type="range" id="elementScale" min="10" max="200" value="100">
-                <div class="range-value" id="scaleValue">100%</div>
+                <h3>خصائص العنصر</h3>
 
                 <label>الشفافية</label>
-                <input type="range" id="elementOpacity" min="10" max="100" value="100">
-                <div class="range-value" id="opacityValue">100%</div>
+                <input type="range" id="opacity" min="0" max="100" value="100">
 
                 <label>الدوران</label>
-                <input type="range" id="elementRotate" min="-180" max="180" value="0">
-                <div class="range-value" id="rotateValue">0°</div>
+                <input type="range" id="rotation" min="-180" max="180" value="0">
 
-                <button class="primary-btn" id="deleteImageBtn">حذف العنصر المحدد</button>
+                <label>حدود العنصر</label>
+                <input type="color" id="objectStroke" value="#d9b968">
 
+                <label>سُمك الحدود</label>
+                <input type="range" id="objectStrokeWidth" min="0" max="30" value="0">
+
+                <button id="removeEffects" class="soft-btn">إزالة التأثيرات</button>
             </section>
 
             <!-- الأشكال -->
-            <section class="tab-content" id="shapes">
 
-                <h3>إضافة شكل</h3>
+            <section class="tab-content" id="shapes">
+                <h3>الأشكال والعناصر</h3>
 
                 <div class="shape-grid">
-                    <button class="shape-btn" data-shape="rectangle">▰<small>مستطيل</small></button>
-                    <button class="shape-btn" data-shape="circle">●<small>دائرة</small></button>
-                    <button class="shape-btn" data-shape="triangle">▲<small>مثلث</small></button>
-                    <button class="shape-btn" data-shape="line">━<small>خط</small></button>
+                    <button data-shape="rect">▰<small>مستطيل</small></button>
+                    <button data-shape="circle">●<small>دائرة</small></button>
+                    <button data-shape="triangle">▲<small>مثلث</small></button>
+                    <button data-shape="line">━<small>خط</small></button>
+                    <button data-shape="star">★<small>نجمة</small></button>
+                    <button data-shape="hex">⬡<small>سداسي</small></button>
+                    <button data-shape="pentagon">⬠<small>خماسي</small></button>
+                    <button data-shape="arrow">➜<small>سهم</small></button>
                 </div>
+
+                <label>لون الشكل</label>
+                <input type="color" id="shapeColor" value="#d9b968">
+
+                <label>لون الحدود</label>
+                <input type="color" id="shapeBorder" value="#ffffff">
+
+                <label>سُمك الحدود</label>
+                <input type="range" id="shapeBorderWidth" min="0" max="30" value="0">
+
+                <button id="addShape" class="primary-btn">إضافة الشكل المحدد</button>
 
                 <div class="divider"></div>
 
-                <label>لون الشكل</label>
-                <input type="color" id="shapeColor" value="#d9b65d">
+                <h3>إطارات جاهزة للصور</h3>
 
-                <button class="primary-btn" id="addShapeBtn">إضافة الشكل</button>
-
+                <div class="button-row">
+                    <button data-frame="circle">دائري</button>
+                    <button data-frame="rounded">مستدير</button>
+                    <button data-frame="diamond">ماسي</button>
+                    <button data-frame="polaroid">بولارويد</button>
+                </div>
             </section>
 
             <!-- الخلفية -->
-            <section class="tab-content" id="background">
 
+            <section class="tab-content" id="background">
                 <h3>لون الخلفية</h3>
+
                 <input type="color" id="backgroundColor" value="#ffffff">
 
-                <div class="divider"></div>
-
-                <h3>خلفيات جاهزة</h3>
-
-                <div class="background-grid">
-                    <button style="background:#ffffff" data-bg="#ffffff"></button>
-                    <button style="background:#070b18" data-bg="#070b18"></button>
-                    <button style="background:#102d32" data-bg="#102d32"></button>
-                    <button style="background:#f1eadb" data-bg="#f1eadb"></button>
-                    <button style="background:#d9b65d" data-bg="#d9b65d"></button>
-                    <button style="background:#dce9e4" data-bg="#dce9e4"></button>
-                    <button style="background:#e8d9d0" data-bg="#e8d9d0"></button>
-                    <button style="background:#253858" data-bg="#253858"></button>
+                <div class="swatches">
+                    <button data-bg="#ffffff" style="background:#fff"></button>
+                    <button data-bg="#101827" style="background:#101827"></button>
+                    <button data-bg="#172f45" style="background:#172f45"></button>
+                    <button data-bg="#d9b968" style="background:#d9b968"></button>
+                    <button data-bg="#f3e9d2" style="background:#f3e9d2"></button>
+                    <button data-bg="#dce9e4" style="background:#dce9e4"></button>
+                    <button data-bg="#e8d9d0" style="background:#e8d9d0"></button>
+                    <button data-bg="#253858" style="background:#253858"></button>
                 </div>
 
-                <div class="divider"></div>
+                <label>تدرجات جاهزة</label>
 
-                <label class="upload-box">
-                    <span>＋</span>
-                    <strong>إضافة صورة كخلفية</strong>
-                    <input type="file" id="backgroundImageInput" accept="image/*">
-                </label>
-
-            </section>
-
-            <!-- الإعدادات -->
-            <section class="tab-content" id="settings">
-
-                <h3>مقاس التصميم</h3>
-
-                <label>اختر المقاس</label>
-                <select id="canvasPreset">
-                    <option value="1080,1080">منشور مربع 1080 × 1080</option>
-                    <option value="1080,1350">منشور طولي 1080 × 1350</option>
-                    <option value="1080,1920">ستوري 1080 × 1920</option>
-                    <option value="1920,1080">عرض أفقي 1920 × 1080</option>
-                    <option value="1200,628">غلاف 1200 × 628</option>
+                <select id="gradientSelect">
+                    <option value="">بدون تدرج</option>
+                    <option value="linear-gradient(135deg,#0f2027,#203a43,#2c5364)">أزرق ليلي</option>
+                    <option value="linear-gradient(135deg,#42275a,#734b6d)">بنفسجي</option>
+                    <option value="linear-gradient(135deg,#c2e59c,#64b3f4)">ربيعي</option>
+                    <option value="linear-gradient(135deg,#f6d365,#fda085)">ذهبي دافئ</option>
+                    <option value="linear-gradient(135deg,#141e30,#243b55)">كحلي</option>
                 </select>
 
-                <div class="divider"></div>
+                <button id="applyGradient" class="primary-btn">تطبيق التدرج</button>
 
-                <h3>إدارة العنصر</h3>
-
-                <button class="primary-btn" id="duplicateBtn">نسخ العنصر المحدد</button>
-                <button class="primary-btn secondary-btn" id="frontBtn">إحضار للأمام</button>
-                <button class="primary-btn secondary-btn" id="backBtn">إرسال للخلف</button>
-
-                <div class="divider"></div>
-
-                <h3>حفظ المشروع</h3>
-                <button class="primary-btn secondary-btn" id="saveProjectBtn">حفظ المشروع على الجهاز</button>
                 <label class="upload-box">
-                    <span>↥</span>
-                    <strong>فتح مشروع محفوظ</strong>
-                    <input type="file" id="loadProjectInput" accept=".json">
+                    <span>▧</span>
+                    <b>تحميل صورة كخلفية</b>
+                    <input type="file" id="backgroundImage" accept="image/*">
                 </label>
 
+                <button id="resetBackground" class="danger-btn">إعادة الخلفية</button>
+            </section>
+
+            <!-- الطبقات -->
+
+            <section class="tab-content" id="layers">
+                <h3>إدارة الطبقات</h3>
+
+                <div class="button-row">
+                    <button id="bringFront">للأمام ↑</button>
+                    <button id="sendBack">للخلف ↓</button>
+                </div>
+
+                <div id="layersList" class="layers-list"></div>
+
+                <button id="duplicateBtn" class="primary-btn">نسخ العنصر</button>
+                <button id="deleteBtn" class="danger-btn">حذف العنصر</button>
             </section>
 
         </div>
     </aside>
 
+    <section class="editor">
+
+        <div class="editor-toolbar">
+            <div>
+                <b>لوحة التصميم</b>
+                <span id="dimensions">1080 × 1080 px</span>
+            </div>
+
+            <div class="zoom-controls">
+                <button id="zoomOut">−</button>
+                <span id="zoomValue">100%</span>
+                <button id="zoomIn">+</button>
+                <button id="fitCanvas">ملاءمة</button>
+                <button id="gridToggle">شبكة</button>
+            </div>
+        </div>
+
+        <div class="canvas-area" id="canvasArea">
+            <div class="canvas-container">
+                <canvas id="designCanvas" width="1080" height="1080"></canvas>
+            </div>
+        </div>
+
+        <div class="footer">
+            <span>اسحب العناصر لتحريكها · استخدم مقابض الزوايا لتغيير الحجم</span>
+            <button id="clearCanvas">مسح التصميم</button>
+        </div>
+
+    </section>
+
 </main>
 
-<div class="toast" id="toast"></div>
+<div id="toast" class="toast"></div>
 
 <script src="script.js"></script>
 </body>
-  </html>
+                        </html>
